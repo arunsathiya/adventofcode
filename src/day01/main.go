@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 	"strconv"
+
+	"github.com/dlclark/regexp2"
 )
 
 func numbersFromWords(line string) string {
-	numberRegex := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|zero)`)
-	replacer := func(s string) int {
+	numberRegex := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero))`, regexp2.None)
+	newText, err := numberRegex.ReplaceFunc(line, func(m regexp2.Match) string {
 		replacements := map[string]int{
 			"one":   1,
 			"two":   2,
@@ -24,11 +25,12 @@ func numbersFromWords(line string) string {
 			"nine":  9,
 			"zero":  0,
 		}
-		return replacements[s]
+		return fmt.Sprint(replacements[m.String()])
+	}, -1, -1)
+	if err != nil {
+		log.Fatal(err)
 	}
-	newText := numberRegex.ReplaceAllStringFunc(line, func(s string) string {
-		return fmt.Sprint(replacer(s))
-	})
+	fmt.Println(newText)
 	return newText
 }
 
