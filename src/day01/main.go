@@ -10,7 +10,7 @@ import (
 )
 
 func numbersFromWords(line string) string {
-	numberRegex := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine)`)
+	numberRegex := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine|zero)`)
 	replacer := func(s string) int {
 		replacements := map[string]int{
 			"one":   1,
