@@ -29,7 +29,6 @@ func numbersFromWords(line string) string {
 	newText := numberRegex.ReplaceAllStringFunc(line, func(s string) string {
 		return fmt.Sprint(replacer(s))
 	})
-	fmt.Println(newText)
 	return newText
 }
 
