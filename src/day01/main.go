@@ -5,8 +5,33 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 )
+
+func numbersFromWords(line string) string {
+	numberRegex := regexp.MustCompile(`(one|two|three|four|five|six|seven|eight|nine)`)
+	replacer := func(s string) int {
+		replacements := map[string]int{
+			"one":   1,
+			"two":   2,
+			"three": 3,
+			"four":  4,
+			"five":  5,
+			"six":   6,
+			"seven": 7,
+			"eight": 8,
+			"nine":  9,
+			"zero":  0,
+		}
+		return replacements[s]
+	}
+	newText := numberRegex.ReplaceAllStringFunc(line, func(s string) string {
+		return fmt.Sprint(replacer(s))
+	})
+	fmt.Println(newText)
+	return newText
+}
 
 func main() {
 	input, err := os.Open("input.txt")
@@ -19,6 +44,7 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		calibration := make([]int, 0)
+		line = numbersFromWords(line)
 		for _, v := range line {
 			v, err := strconv.Atoi(string(v))
 			if len(calibration) == 2 {
