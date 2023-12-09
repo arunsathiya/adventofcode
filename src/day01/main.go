@@ -11,12 +11,9 @@ import (
 )
 
 func numbersFromWords(line string) (string, error) {
-	numberRegex, err := regexp2.Compile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero))`, regexp2.None)
-	if err != nil {
-		return "", err
-	}
+	numberRegex := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero))`, regexp2.None)
 
-	replacements := map[string]string{
+	_ = map[string]string{
 		"one":   "1",
 		"two":   "2",
 		"three": "3",
@@ -34,22 +31,13 @@ func numbersFromWords(line string) (string, error) {
 		return "", err
 	}
 
-	offset := 0
 	for match != nil {
-		word := match.GroupByNumber(1).String()
-		if replacement, ok := replacements[word]; ok {
-			before := line[:match.Index+offset]
-			after := line[match.Index+offset+len(word):]
-			line = before + replacement + after
-			offset += len(replacement) - len(word)
-		}
-
+		fmt.Println(match.String())
 		match, err = numberRegex.FindNextMatch(match)
 		if err != nil {
 			return "", err
 		}
 	}
-	fmt.Println(line)
 	return line, nil
 }
 
