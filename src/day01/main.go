@@ -11,9 +11,9 @@ import (
 )
 
 func numbersFromWords(line string) (string, error) {
-	numberRegex := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero))`, regexp2.None)
+	re := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero|1|2|3|4|5|6|7|8|9|0))`, regexp2.None)
 
-	_ = map[string]string{
+	replacements := map[string]string{
 		"one":   "1",
 		"two":   "2",
 		"three": "3",
@@ -24,21 +24,38 @@ func numbersFromWords(line string) (string, error) {
 		"eight": "8",
 		"nine":  "9",
 		"zero":  "0",
+		"1":     "1",
+		"2":     "2",
+		"3":     "3",
+		"4":     "4",
+		"5":     "5",
+		"6":     "6",
+		"7":     "7",
+		"8":     "8",
+		"9":     "9",
+		"0":     "0",
 	}
 
-	match, err := numberRegex.FindStringMatch(line)
+	firstTwoNumbers := ""
+	match, err := re.FindStringMatch(line)
 	if err != nil {
 		return "", err
 	}
 
 	for match != nil {
-		fmt.Println(match.String())
-		match, err = numberRegex.FindNextMatch(match)
+		number, ok := replacements[match.GroupByNumber(1).String()]
+		if ok {
+			firstTwoNumbers += number
+		}
+		if len(firstTwoNumbers) == 2 {
+			break
+		}
+		match, err = re.FindNextMatch(match)
 		if err != nil {
 			return "", err
 		}
 	}
-	return line, nil
+	return firstTwoNumbers, nil
 }
 
 func main() {
@@ -73,6 +90,7 @@ func main() {
 		default:
 			sum += 0
 		}
+		fmt.Println(calibration)
 	}
 	fmt.Println(sum)
 
