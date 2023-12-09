@@ -16,7 +16,7 @@ func numbersFromWords(line string) (string, error) {
 		return "", err
 	}
 
-	replacements := map[string]string{
+	_ = map[string]string{
 		"one":   "1",
 		"two":   "2",
 		"three": "3",
@@ -34,21 +34,7 @@ func numbersFromWords(line string) (string, error) {
 		return "", err
 	}
 
-	offset := 0
-	for match != nil {
-		word := match.GroupByNumber(1).String()
-		if replacement, ok := replacements[word]; ok {
-			before := line[:match.Index+offset]
-			after := line[match.Index+offset+len(word):]
-			line = before + replacement + after
-			offset += len(replacement) - len(word)
-		}
-
-		match, err = numberRegex.FindNextMatch(match)
-		if err != nil {
-			return "", err
-		}
-	}
+	fmt.Println(match)
 	return line, nil
 }
 
@@ -84,7 +70,6 @@ func main() {
 		default:
 			sum += 0
 		}
-		fmt.Println(calibration)
 	}
 	fmt.Println(sum)
 
