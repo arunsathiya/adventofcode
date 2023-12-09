@@ -68,29 +68,23 @@ func main() {
 	sum := 0
 	for scanner.Scan() {
 		line := scanner.Text()
-		calibration := make([]int, 0)
 		line, err = numbersFromWords(line)
 		if err != nil {
 			log.Fatal(err)
 		}
-		for _, v := range line {
-			v, err := strconv.Atoi(string(v))
-			if len(calibration) == 2 {
-				break
+		if len(line) >= 2 {
+			number, err := strconv.Atoi(line[:2])
+			if err != nil {
+				log.Fatal(err)
 			}
-			if err == nil {
-				calibration = append(calibration, v)
+			sum += number
+		} else {
+			number, err := strconv.Atoi(line[:1])
+			if err != nil {
+				log.Fatal(err)
 			}
+			sum += number * 11
 		}
-		switch len(calibration) {
-		case 1:
-			sum += calibration[0] * 11
-		case 2:
-			sum += calibration[0]*10 + calibration[1]
-		default:
-			sum += 0
-		}
-		fmt.Println(calibration)
 	}
 	fmt.Println(sum)
 
