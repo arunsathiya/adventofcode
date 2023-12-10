@@ -76,12 +76,7 @@ func numericalValues(line string) (int, error) {
 	return number, nil
 }
 
-func main() {
-	input, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer input.Close()
+func calculateSum(input *os.File) (int, error) {
 	scanner := bufio.NewScanner(input)
 	sum := 0
 	for scanner.Scan() {
@@ -92,6 +87,19 @@ func main() {
 		sum += number
 	}
 	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return sum, nil
+}
+
+func main() {
+	input, err := os.Open("input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer input.Close()
+	sum, err := calculateSum(input)
+	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println(sum)
