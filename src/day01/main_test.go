@@ -61,6 +61,7 @@ func TestCalculateSum(t *testing.T) {
 		expected int
 		err      bool
 	}{
+		{"empty input", "a", 0, false},
 		{"valid input", "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen", 279, false},
 		{"valid input", "twothree\nfour", 67, false},
 	}
