@@ -34,18 +34,15 @@ func number(line string) (int, error) {
 		"9":     "9",
 		"0":     "0",
 	}
-	firstTwoNumbers := ""
+	matched := ""
 	match, err := re.FindStringMatch(line)
 	if err != nil {
 		return 0, err
 	}
 	for match != nil {
-		number, ok := replacements[match.GroupByNumber(1).String()]
+		word, ok := replacements[match.GroupByNumber(1).String()]
 		if ok {
-			firstTwoNumbers += number
-		}
-		if len(firstTwoNumbers) == 2 {
-			break
+			matched += word
 		}
 		match, err = re.FindNextMatch(match)
 		if err != nil {
@@ -53,18 +50,19 @@ func number(line string) (int, error) {
 		}
 	}
 	number := 0
-	switch len(firstTwoNumbers) {
+	switch len(matched) {
 	case 0:
 		return 0, nil
 	case 1:
-		number, err = strconv.Atoi(firstTwoNumbers[:1])
+		number, err = strconv.Atoi(matched[:1])
 		if err != nil {
 			return 0, err
 		}
 		number *= 11
 		return number, nil
 	default:
-		number, err = strconv.Atoi(firstTwoNumbers[:2])
+		matched = matched[:1] + matched[len(matched)-1:]
+		number, err = strconv.Atoi(matched)
 		if err != nil {
 			return 0, err
 		}

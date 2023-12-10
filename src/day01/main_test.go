@@ -10,14 +10,15 @@ func TestNumber(t *testing.T) {
 		input  string
 		output int
 	}{
-		{"two1nine", 21},
-		{"eightwothree", 82},
-		{"abcone2threexyz", 12},
-		{"xtwone3four", 21},
-		{"4nineeightseven2", 49},
-		{"zoneight234", 18},
+		{"two1nine", 29},
+		{"eightwothree", 83},
+		{"abcone2threexyz", 13},
+		{"xtwone3four", 24},
+		{"4nineeightseven2", 42},
+		{"zoneight234", 14},
 		{"7pqrstsixteen", 76},
 		{"eightawjhkawaw", 88},
+		{"8aw", 88},
 	}
 	for _, tt := range tests {
 		got, err := number(tt.input)
@@ -38,7 +39,7 @@ func TestCalculateSum(t *testing.T) {
 		err      bool
 	}{
 		{"valid input", "a\n12", 12, false},
-		{"valid input", "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen", 279, false},
+		{"valid input", "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen", 281, false},
 		{"valid input", "twothree\nfour", 67, false},
 	}
 	for _, test := range tests {
