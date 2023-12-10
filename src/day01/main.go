@@ -11,7 +11,7 @@ import (
 )
 
 func number(line string) (int, error) {
-	re := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero|1|2|3|4|5|6|7|8|9|0))`, regexp2.None)
+	re := regexp2.MustCompile(`(?=(1|2|3|4|5|6|7|8|9|0))`, regexp2.None)
 	replacements := map[string]string{
 		"one":   "1",
 		"two":   "2",
