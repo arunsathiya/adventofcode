@@ -10,12 +10,7 @@ import (
 )
 
 func identifyCubes(input *os.File) (map[int]bool, error) {
-	idPossibility := map[int]bool{
-		1: true,
-		2: false,
-		3: false,
-		4: true,
-	}
+	idPossibility := map[int]bool{}
 	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		line := scanner.Text()
