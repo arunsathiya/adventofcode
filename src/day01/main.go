@@ -10,7 +10,7 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
-func numbersFromWords(line string) (string, error) {
+func getFirstTwoNumbers(line string) (string, error) {
 	re := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero|1|2|3|4|5|6|7|8|9|0))`, regexp2.None)
 
 	replacements := map[string]string{
@@ -58,25 +58,22 @@ func numbersFromWords(line string) (string, error) {
 	return firstTwoNumbers, nil
 }
 
-func calculateSum(line string, sum int) int {
-	line, err := numbersFromWords(line)
+func numericalValues(line string) (int, error) {
+	line, err := getFirstTwoNumbers(line)
 	if err != nil {
-		log.Fatal(err)
+		return 0, nil
 	}
+	number := 0
 	if len(line) >= 2 {
-		number, err := strconv.Atoi(line[:2])
-		if err != nil {
-			log.Fatal(err)
-		}
-		sum += number
+		number, err = strconv.Atoi(line[:2])
 	} else {
-		number, err := strconv.Atoi(line[:1])
-		if err != nil {
-			log.Fatal(err)
-		}
-		sum += number * 11
+		number, err = strconv.Atoi(line[:1])
+		number *= 11
 	}
-	return sum
+	if err != nil {
+		return 0, err
+	}
+	return number, nil
 }
 
 func main() {
@@ -84,15 +81,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	defer input.Close()
 	scanner := bufio.NewScanner(input)
 	sum := 0
 	for scanner.Scan() {
-		sum = calculateSum(scanner.Text(), sum)
+		number, err := numericalValues(scanner.Text())
+		if err != nil {
+			log.Fatal(err)
+		}
+		sum += number
 	}
-	fmt.Println(sum)
-
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println(sum)
 }
