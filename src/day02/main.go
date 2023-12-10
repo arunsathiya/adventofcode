@@ -17,46 +17,43 @@ func identifyCubes(input *os.File) (map[int]bool, error) {
 		4: true,
 	}
 	scanner := bufio.NewScanner(input)
-	possibility := true
-	id := 0
 	for scanner.Scan() {
 		line := scanner.Text()
 		gameIdBlock := strings.Split(line, ":")[0]
-		id, _ = strconv.Atoi(strings.Split(gameIdBlock, " ")[1])
+		id, err := strconv.Atoi(strings.Split(gameIdBlock, " ")[1])
+		if err != nil {
+			return nil, err
+		}
 		cubesBlock := strings.Split(line, ":")[1]
 		cubesBlock = cubesBlock[1:]
 		attempts := strings.Split(cubesBlock, "; ")
+		possibility := true
 		for _, attempt := range attempts {
 			colors := strings.Split(attempt, ", ")
 			for _, color := range colors {
-				switch color {
+				countColorCombo := strings.Split(color, " ")
+				count, err := strconv.Atoi(countColorCombo[0])
+				if err != nil {
+					return nil, err
+				}
+				switch countColorCombo[1] {
 				case "red":
-					red, err := strconv.Atoi(strings.Split(color, " red")[0])
-					if err != nil {
-						return nil, err
-					}
-					if red > 12 {
+					if count > 12 {
 						possibility = false
 					}
 					idPossibility[id] = possibility
 				case "green":
-					green, err := strconv.Atoi(strings.Split(color, " green")[0])
-					if err != nil {
-						return nil, err
-					}
-					if green > 13 {
+					if count > 13 {
 						possibility = false
 					}
 					idPossibility[id] = possibility
 				case "blue":
-					blue, err := strconv.Atoi(strings.Split(color, " blue")[0])
-					if err != nil {
-						return nil, err
-					}
-					if blue > 14 {
+					if count > 14 {
 						possibility = false
 					}
 					idPossibility[id] = possibility
+				default:
+					continue
 				}
 			}
 		}
@@ -74,5 +71,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(idPossibility)
+	sum := 0
+	for id, possibility := range idPossibility {
+		if possibility {
+			sum += id
+		}
+	}
+	fmt.Println(sum)
 }
