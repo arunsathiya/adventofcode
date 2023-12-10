@@ -19,6 +19,16 @@ func TestNumber(t *testing.T) {
 		{"7pqrstsixteen", 76},
 		{"eightawjhkawaw", 88},
 		{"8aw", 88},
+		{"76xkqjzqtwonfour", 74},
+		{"sixthree8sixjxjqsjgjgp", 66},
+		{"38bgcczgtninefivefive", 35},
+		{"sixthree4eight", 68},
+		{"nhp3zdc", 33},
+		{"279four", 24},
+		{"vzxf4tqrljgxmthreejcr", 43},
+		{"bbm4twoeight8oneone3one", 41},
+		{"nineninesix6nine", 99},
+		{"fourseven5seveneightsvtkcjdrfour", 44},
 	}
 	for _, tt := range tests {
 		got, err := number(tt.input)
@@ -41,6 +51,7 @@ func TestCalculateSum(t *testing.T) {
 		{"valid input", "a\n12", 12, false},
 		{"valid input", "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen", 281, false},
 		{"valid input", "twothree\nfour", 67, false},
+		{"valid input", "76xkqjzqtwonfour\nsixthree8sixjxjqsjgjgp\n38bgcczgtninefivefive\nsixthree4eight\nnhp3zdc\n279four\nvzxf4tqrljgxmthreejcr\nbbm4twoeight8oneone3one\nnineninesix6nine\nfourseven5seveneightsvtkcjdrfour", 527, false},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
