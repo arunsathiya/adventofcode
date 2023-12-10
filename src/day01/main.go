@@ -52,22 +52,21 @@ func number(line string) (int, error) {
 	number := 0
 	switch len(matched) {
 	case 0:
-		return 0, nil
+		number = 0
 	case 1:
 		number, err = strconv.Atoi(matched[:1])
 		if err != nil {
 			return 0, err
 		}
 		number *= 11
-		return number, nil
 	default:
 		matched = matched[:1] + matched[len(matched)-1:]
 		number, err = strconv.Atoi(matched)
 		if err != nil {
 			return 0, err
 		}
-		return number, nil
 	}
+	return number, nil
 }
 
 func calculateSum(input *os.File) (int, error) {
