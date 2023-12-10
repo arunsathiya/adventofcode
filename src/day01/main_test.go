@@ -5,31 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetFirstTwoNumbers(t *testing.T) {
-	tests := []struct {
-		input  string
-		output string
-	}{
-		{"two1nine", "21"},
-		{"eightwothree", "82"},
-		{"abcone2threexyz", "12"},
-		{"xtwone3four", "21"},
-		{"4nineeightseven2", "49"},
-		{"zoneight234", "18"},
-		{"7pqrstsixteen", "76"},
-		{"eightawjhkawaw", "8"},
-	}
-	for _, tt := range tests {
-		got, err := getFirstTwoNumbers(tt.input)
-		if err != nil {
-			t.Errorf("%q returned an error %v", tt.input, err)
-		}
-		if got != tt.output {
-			t.Errorf("Wanted: %v, Got: %v", tt.output, got)
-		}
-	}
-}
-func TestNumericalValues(t *testing.T) {
+func TestNumber(t *testing.T) {
 	tests := []struct {
 		input  string
 		output int
@@ -44,7 +20,7 @@ func TestNumericalValues(t *testing.T) {
 		{"eightawjhkawaw", 88},
 	}
 	for _, tt := range tests {
-		got, err := numericalValues(tt.input)
+		got, err := number(tt.input)
 		if err != nil {
 			t.Errorf("%q returned an error %v", tt.input, err)
 		}
@@ -61,7 +37,7 @@ func TestCalculateSum(t *testing.T) {
 		expected int
 		err      bool
 	}{
-		{"empty input", "a", 0, false},
+		{"valid input", "a\n12", 12, false},
 		{"valid input", "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen", 279, false},
 		{"valid input", "twothree\nfour", 67, false},
 	}

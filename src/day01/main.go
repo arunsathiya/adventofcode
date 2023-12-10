@@ -10,9 +10,8 @@ import (
 	"github.com/dlclark/regexp2"
 )
 
-func getFirstTwoNumbers(line string) (string, error) {
+func number(line string) (int, error) {
 	re := regexp2.MustCompile(`(?=(one|two|three|four|five|six|seven|eight|nine|zero|1|2|3|4|5|6|7|8|9|0))`, regexp2.None)
-
 	replacements := map[string]string{
 		"one":   "1",
 		"two":   "2",
@@ -35,13 +34,11 @@ func getFirstTwoNumbers(line string) (string, error) {
 		"9":     "9",
 		"0":     "0",
 	}
-
 	firstTwoNumbers := ""
 	match, err := re.FindStringMatch(line)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
-
 	for match != nil {
 		number, ok := replacements[match.GroupByNumber(1).String()]
 		if ok {
@@ -52,35 +49,34 @@ func getFirstTwoNumbers(line string) (string, error) {
 		}
 		match, err = re.FindNextMatch(match)
 		if err != nil {
-			return "", err
+			return 0, err
 		}
 	}
-	return firstTwoNumbers, nil
-}
-
-func numericalValues(line string) (int, error) {
-	line, err := getFirstTwoNumbers(line)
-	if err != nil {
-		return 0, nil
-	}
 	number := 0
-	if len(line) >= 2 {
-		number, err = strconv.Atoi(line[:2])
-	} else {
-		number, err = strconv.Atoi(line[:1])
+	switch len(firstTwoNumbers) {
+	case 0:
+		return 0, nil
+	case 1:
+		number, err = strconv.Atoi(firstTwoNumbers[:1])
+		if err != nil {
+			return 0, err
+		}
 		number *= 11
+		return number, nil
+	default:
+		number, err = strconv.Atoi(firstTwoNumbers[:2])
+		if err != nil {
+			return 0, err
+		}
+		return number, nil
 	}
-	if err != nil {
-		return 0, err
-	}
-	return number, nil
 }
 
 func calculateSum(input *os.File) (int, error) {
 	scanner := bufio.NewScanner(input)
 	sum := 0
 	for scanner.Scan() {
-		number, err := numericalValues(scanner.Text())
+		number, err := number(scanner.Text())
 		if err != nil {
 			log.Fatal(err)
 		}
