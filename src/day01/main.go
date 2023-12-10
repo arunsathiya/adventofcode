@@ -58,6 +58,27 @@ func numbersFromWords(line string) (string, error) {
 	return firstTwoNumbers, nil
 }
 
+func calculateSum(line string, sum int) int {
+	line, err := numbersFromWords(line)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(line) >= 2 {
+		number, err := strconv.Atoi(line[:2])
+		if err != nil {
+			log.Fatal(err)
+		}
+		sum += number
+	} else {
+		number, err := strconv.Atoi(line[:1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		sum += number * 11
+	}
+	return sum
+}
+
 func main() {
 	input, err := os.Open("input.txt")
 	if err != nil {
@@ -67,24 +88,7 @@ func main() {
 	scanner := bufio.NewScanner(input)
 	sum := 0
 	for scanner.Scan() {
-		line := scanner.Text()
-		line, err = numbersFromWords(line)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if len(line) >= 2 {
-			number, err := strconv.Atoi(line[:2])
-			if err != nil {
-				log.Fatal(err)
-			}
-			sum += number
-		} else {
-			number, err := strconv.Atoi(line[:1])
-			if err != nil {
-				log.Fatal(err)
-			}
-			sum += number * 11
-		}
+		sum = calculateSum(scanner.Text(), sum)
 	}
 	fmt.Println(sum)
 
