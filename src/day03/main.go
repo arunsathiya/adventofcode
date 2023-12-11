@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -11,32 +12,36 @@ import (
 
 func numbers(input *os.File) ([]int, error) {
 	re := regexp.MustCompile(`\d+`)
-	digit := regexp.MustCompile(`\d`)
 	lines := make([]string, 0)
-	invalid := make([]int, 0)
+	invalidNumbers := make([]int, 0)
 	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
 	for lineIndex, line := range lines {
-		matches := re.FindAllStringIndex(line, -1)
-		for _, match := range matches {
-			matchIndicesAtLineLevel := make([]int, 0)
-			for i := match[0]; i < match[1]; i++ {
-				matchIndicesAtLineLevel = append(matchIndicesAtLineLevel, i)
-			}
-			for _, matchIndexAtLineLevel := range matchIndicesAtLineLevel {
-				if lineIndex != 0 && lineIndex != len(lines)-1 {
-					if matchIndexAtLineLevel != 0 && matchIndexAtLineLevel != len(strings.Split(line, ""))-1 {
-						if strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel] == "." && (strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1] == "." || digit.MatchString(strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1])) && (strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel+1] == "." || digit.MatchString(strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1])) && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel+1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel+1] == "." {
-							invalidNumber, _ := strconv.Atoi(lines[lineIndex][match[0]:match[1]])
-							invalid = append(invalid, invalidNumber)
+		if lineIndex != 0 && lineIndex != len(lines)-1 {
+			matchesInLine := re.FindAllStringIndex(line, -1)
+			for _, match := range matchesInLine {
+				matchIndexAtLineLevelStart := match[0]
+				matchIndexAtLineLevelEnd := match[1] - 1
+				for i := matchIndexAtLineLevelStart - 1; i <= matchIndexAtLineLevelEnd+1; i++ {
+					if i >= 0 && i < len(line) {
+						prevLine, nextLine := strings.Split(lines[lineIndex-1], ""), strings.Split(lines[lineIndex+1], "")
+						if i < len(prevLine) && i < len(nextLine) && prevLine[i] == "." && nextLine[i] == "." {
+							invalidNumber, err := strconv.Atoi(line[match[0]:match[1]])
+							if err != nil {
+								log.Fatal(err)
+							}
+							if len(invalidNumbers) == 0 || invalidNumbers[len(invalidNumbers)-1] != invalidNumber {
+								invalidNumbers = append(invalidNumbers, invalidNumber)
+							}
 						}
 					}
 				}
 			}
 		}
 	}
+	fmt.Println(invalidNumbers)
 	return nil, nil
 }
 
@@ -46,12 +51,8 @@ func main() {
 		log.Fatal(err)
 	}
 	defer input.Close()
-	numbers, err := numbers(input)
+	_, err = numbers(input)
 	if err != nil {
 		log.Fatal(err)
-	}
-	sum := 0
-	for _, number := range numbers {
-		sum += number
 	}
 }
