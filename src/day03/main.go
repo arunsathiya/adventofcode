@@ -24,16 +24,20 @@ func numbers(input *os.File) ([]int, error) {
 			for _, match := range matchesInLine {
 				matchIndexAtLineLevelStart := match[0]
 				matchIndexAtLineLevelEnd := match[1] - 1
-				for i := matchIndexAtLineLevelStart - 1; i <= matchIndexAtLineLevelEnd+1; i++ {
-					if i >= 0 && i < len(line) {
-						prevLine, nextLine := strings.Split(lines[lineIndex-1], ""), strings.Split(lines[lineIndex+1], "")
-						if i < len(prevLine) && i < len(nextLine) && prevLine[i] == "." && nextLine[i] == "." {
-							invalidNumber, err := strconv.Atoi(line[match[0]:match[1]])
-							if err != nil {
-								log.Fatal(err)
-							}
-							if len(invalidNumbers) == 0 || invalidNumbers[len(invalidNumbers)-1] != invalidNumber {
-								invalidNumbers = append(invalidNumbers, invalidNumber)
+				leftOk := (matchIndexAtLineLevelStart == 0 || string(line[matchIndexAtLineLevelStart-1]) == ".")
+				rightOk := (matchIndexAtLineLevelEnd == len(line)-1 || string(line[matchIndexAtLineLevelEnd+1]) == ".")
+				if leftOk && rightOk {
+					for i := matchIndexAtLineLevelStart - 1; i <= matchIndexAtLineLevelEnd+1; i++ {
+						if i >= 0 && i < len(line) {
+							prevLine, nextLine := strings.Split(lines[lineIndex-1], ""), strings.Split(lines[lineIndex+1], "")
+							if i < len(prevLine) && i < len(nextLine) && prevLine[i] == "." && nextLine[i] == "." {
+								invalidNumber, err := strconv.Atoi(line[match[0]:match[1]])
+								if err != nil {
+									log.Fatal(err)
+								}
+								if len(invalidNumbers) == 0 || invalidNumbers[len(invalidNumbers)-1] != invalidNumber {
+									invalidNumbers = append(invalidNumbers, invalidNumber)
+								}
 							}
 						}
 					}
