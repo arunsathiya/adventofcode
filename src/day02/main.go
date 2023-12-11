@@ -9,8 +9,10 @@ import (
 	"strings"
 )
 
-func identifyCubes(input *os.File) (map[int]bool, error) {
-	idPossibility := map[int]bool{}
+type colorCount map[string]int
+
+func identifyCubes(input *os.File) (map[int]colorCount, error) {
+	idColor := make(map[int]colorCount)
 	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -22,7 +24,9 @@ func identifyCubes(input *os.File) (map[int]bool, error) {
 		cubesBlock := strings.Split(line, ":")[1]
 		cubesBlock = cubesBlock[1:]
 		attempts := strings.Split(cubesBlock, "; ")
-		possibility := true
+		if idColor[id] == nil {
+			idColor[id] = make(colorCount)
+		}
 		for _, attempt := range attempts {
 			colors := strings.Split(attempt, ", ")
 			for _, color := range colors {
@@ -33,27 +37,24 @@ func identifyCubes(input *os.File) (map[int]bool, error) {
 				}
 				switch countColorCombo[1] {
 				case "red":
-					if count > 12 {
-						possibility = false
+					if count > idColor[id]["red"] {
+						idColor[id]["red"] = count
 					}
-					idPossibility[id] = possibility
 				case "green":
-					if count > 13 {
-						possibility = false
+					if count > idColor[id]["green"] {
+						idColor[id]["green"] = count
 					}
-					idPossibility[id] = possibility
 				case "blue":
-					if count > 14 {
-						possibility = false
+					if count > idColor[id]["blue"] {
+						idColor[id]["blue"] = count
 					}
-					idPossibility[id] = possibility
 				default:
 					continue
 				}
 			}
 		}
 	}
-	return idPossibility, nil
+	return idColor, nil
 }
 
 func main() {
@@ -62,15 +63,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer input.Close()
-	idPossibility, err := identifyCubes(input)
+	cubes, err := identifyCubes(input)
 	if err != nil {
 		log.Fatal(err)
 	}
 	sum := 0
-	for id, possibility := range idPossibility {
-		if possibility {
-			sum += id
-		}
+	for _, colors := range cubes {
+		sum += colors["red"] * colors["green"] * colors["blue"]
 	}
 	fmt.Println(sum)
 }
