@@ -2,16 +2,18 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 func numbers(input *os.File) ([]int, error) {
 	re := regexp.MustCompile(`\d+`)
+	digit := regexp.MustCompile(`\d`)
 	lines := make([]string, 0)
+	invalid := make([]int, 0)
 	scanner := bufio.NewScanner(input)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
@@ -26,8 +28,9 @@ func numbers(input *os.File) ([]int, error) {
 			for _, matchIndexAtLineLevel := range matchIndicesAtLineLevel {
 				if lineIndex != 0 && lineIndex != len(lines)-1 {
 					if matchIndexAtLineLevel != 0 && matchIndexAtLineLevel != len(strings.Split(line, ""))-1 {
-						if strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel] == "." && strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel+1] == "." && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel+1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel+1] == "." {
-							fmt.Println(lines[lineIndex][match[0]:match[1]])
+						if strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel] == "." && (strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1] == "." || digit.MatchString(strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1])) && (strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel+1] == "." || digit.MatchString(strings.Split(lines[lineIndex], "")[matchIndexAtLineLevel-1])) && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex-1], "")[matchIndexAtLineLevel+1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel-1] == "." && strings.Split(lines[lineIndex+1], "")[matchIndexAtLineLevel+1] == "." {
+							invalidNumber, _ := strconv.Atoi(lines[lineIndex][match[0]:match[1]])
+							invalid = append(invalid, invalidNumber)
 						}
 					}
 				}
