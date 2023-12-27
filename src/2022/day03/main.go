@@ -57,9 +57,9 @@ func search(items []string, target string) (bool, string, error) {
 			return true, target, nil
 		}
 		if items[mid] < target {
-			mid = left + 1
+			left = mid + 1
 		} else {
-			mid = right - 1
+			right = mid - 1
 		}
 	}
 	return false, "", nil
