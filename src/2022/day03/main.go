@@ -19,6 +19,7 @@ func parseInput(input *os.File) ([]string, error) {
 }
 
 func Day03Of2022PartA(rucksacks []string) (int, error) {
+	priorities := 0
 	for _, rucksack := range rucksacks {
 		items := strings.Split(rucksack, "")
 		itemsA, itemsB := halves(items)
@@ -30,14 +31,17 @@ func Day03Of2022PartA(rucksacks []string) (int, error) {
 		})
 		for _, item := range itemsB {
 			status, target, err := search(itemsA, item)
-			if !status {
+			if err != nil {
 				return 0, err
 			}
-			runeItem := []rune(target)[0]
-			return charToNumber(runeItem), nil
+			if status {
+				runeItem := []rune(target)[0]
+				priorities += charToNumber(runeItem)
+				break
+			}
 		}
 	}
-	return 0, nil
+	return priorities, nil
 }
 
 func charToNumber(ch rune) int {
