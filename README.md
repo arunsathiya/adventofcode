@@ -1,3 +1,5 @@
+[![Checks](https://github.com/arunsathiya/adventofcode/actions/workflows/tests.yml/badge.svg)](https://github.com/arunsathiya/adventofcode/actions)
+
 # Advent Of Code
 
 My Advent Of Code solutions in golang.
