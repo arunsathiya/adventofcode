@@ -16,11 +16,11 @@ func Day01Of2022(input *os.File) (int, error) {
 		scanned := scanner.Text()
 		value += scanned + "\n"
 	}
-	calories := strings.Split(value, "\n\n")
+	blocks := strings.Split(value, "\n\n")
 	highestSum := 0
-	for _, perPersonCalories := range calories {
+	for _, calories := range blocks {
 		sum := 0
-		calorie := strings.Split(perPersonCalories, "\n")
+		calorie := strings.Split(calories, "\n")
 		for i := 0; i < len(calorie); i++ {
 			if calorie[i] != "" {
 				calorie, err := strconv.Atoi(calorie[i])
@@ -30,7 +30,9 @@ func Day01Of2022(input *os.File) (int, error) {
 				sum += calorie
 			}
 		}
-		highestSum = sum
+		if sum > highestSum {
+			highestSum = sum
+		}
 	}
 	return highestSum, nil
 }
