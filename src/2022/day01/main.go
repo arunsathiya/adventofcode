@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -24,7 +25,22 @@ func Day01Of2022PartA(blocks []string) (int, error) {
 }
 
 func Day01Of2022PartB(blocks []string) (int, error) {
-	return 0, nil
+	listOfSum := make([]int, 0)
+	topThreeSum := 0
+	for _, block := range blocks {
+		sum, err := processBlock(block)
+		if err != nil {
+			return 0, err
+		}
+		listOfSum = append(listOfSum, sum)
+	}
+	sort.Slice(listOfSum, func(i, j int) bool {
+		return listOfSum[i] > listOfSum[j]
+	})
+	for i := 0; i < 3; i++ {
+		topThreeSum += listOfSum[i]
+	}
+	return topThreeSum, nil
 }
 
 func parseInput(input *os.File) ([]string, error) {
@@ -66,5 +82,11 @@ func main() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+	input.Seek(0, 0)
+	topThreeSum, err := Day01Of2022PartB(blocks)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 	fmt.Println(highestSum)
+	fmt.Println(topThreeSum)
 }
