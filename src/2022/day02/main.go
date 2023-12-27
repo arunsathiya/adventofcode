@@ -48,6 +48,49 @@ func Day02Of2022PartA(rounds []string) (int, error) {
 	return totalSum, nil
 }
 
+func Day02Of2022PartB(rounds []string) (int, error) {
+	totalSum := 0
+	for _, round := range rounds {
+		sum := 0
+		opponent := strings.Split(round, " ")[0]
+		winCondition := strings.Split(round, " ")[1]
+		switch winCondition {
+		case "X":
+			sum += 0
+			switch opponent {
+			case "A":
+				sum += 3
+			case "B":
+				sum += 1
+			case "C":
+				sum += 2
+			}
+		case "Y":
+			sum += 3
+			switch opponent {
+			case "A":
+				sum += 1
+			case "B":
+				sum += 2
+			case "C":
+				sum += 3
+			}
+		case "Z":
+			sum += 6
+			switch opponent {
+			case "A":
+				sum += 2
+			case "B":
+				sum += 3
+			case "C":
+				sum += 1
+			}
+		}
+		totalSum += sum
+	}
+	return totalSum, nil
+}
+
 func parseInput(input *os.File) ([]string, error) {
 	scanner := bufio.NewScanner(input)
 	lines := make([]string, 0)
@@ -72,5 +115,11 @@ func main() {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+	input.Seek(0, 0)
+	partBSumOfRounds, err := Day02Of2022PartB(rounds)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 	fmt.Println(sumOfRounds)
+	fmt.Println(partBSumOfRounds)
 }

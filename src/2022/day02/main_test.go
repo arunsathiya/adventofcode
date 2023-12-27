@@ -10,11 +10,13 @@ func TestDay02Of2022(t *testing.T) {
 		name      string
 		input     string
 		expectedA int
+		expectedB int
 	}{
 		{
 			name:      "test case from AOC",
 			input:     "test.txt",
 			expectedA: 15,
+			expectedB: 12,
 		},
 	}
 	for _, test := range tests {
@@ -30,10 +32,18 @@ func TestDay02Of2022(t *testing.T) {
 			}
 			sumOfRounds, err := Day02Of2022PartA(rounds)
 			if err != nil {
-				t.Errorf("Expected %d, got %v", test.expectedA, err)
+				t.Fatalf(err.Error())
 			}
 			if sumOfRounds != test.expectedA {
 				t.Errorf("Expected %d, got %d", test.expectedA, sumOfRounds)
+			}
+			file.Seek(0, 0)
+			partBSumOfRounds, err := Day02Of2022PartB(rounds)
+			if err != nil {
+				t.Fatalf(err.Error())
+			}
+			if partBSumOfRounds != test.expectedB {
+				t.Errorf("Expected %d, got %d", test.expectedB, partBSumOfRounds)
 			}
 		})
 	}
