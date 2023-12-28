@@ -30,12 +30,8 @@ func Day03Of2022PartA(rucksacks []string) (int, error) {
 			return itemsB[i] < itemsB[j]
 		})
 		for _, item := range itemsB {
-			status, target, err := search(itemsA, item)
-			if err != nil {
-				return 0, err
-			}
-			if status {
-				runeItem := []rune(target)[0]
+			if search(itemsA, item) {
+				runeItem := []rune(item)[0]
 				priorities += charToNumber(runeItem)
 				break
 			}
@@ -55,22 +51,20 @@ func Day03Of2022PartB(rucksacks []string) (int, error) {
 		groups = append(groups, rucksacks[i:end])
 	}
 	for _, group := range groups {
-		itemsA, itemsB, itemsC := thirds(group)
-		for _, itemB := range itemsB {
-			status, target, err := search(itemsA, itemB)
-			if err != nil {
-				return 0, err
-			}
-			if status {
-				status, target, err := search(itemsC, target)
-				if err != nil {
-					return 0, err
-				}
-				if status {
-					runeItem := []rune(target)[0]
-					priorities += charToNumber(runeItem)
-					break
-				}
+		itemsA, itemsB, itemsC := group[0], group[1], group[2]
+		sort.Slice(strings.Split(itemsA, ""), func(i, j int) bool {
+			return strings.Split(itemsA, "")[i] < strings.Split(itemsA, "")[j]
+		})
+		sort.Slice(strings.Split(itemsB, ""), func(i, j int) bool {
+			return strings.Split(itemsB, "")[i] < strings.Split(itemsB, "")[j]
+		})
+		sort.Slice(strings.Split(itemsC, ""), func(i, j int) bool {
+			return strings.Split(itemsC, "")[i] < strings.Split(itemsC, "")[j]
+		})
+		longest, second, third := longestArrays(itemsA, itemsB, itemsC)
+		for _, item := range longest {
+			if search(strings.Split(second, ""), string(item)) && search(strings.Split(third, ""), string(item)) {
+				priorities += charToNumber(item)
 				break
 			}
 		}
@@ -78,9 +72,14 @@ func Day03Of2022PartB(rucksacks []string) (int, error) {
 	return priorities, nil
 }
 
-func thirds(input []string) ([]string, []string, []string) {
-	breaker := len(input) / 3
-	return input[:breaker], input[breaker : 2*breaker], input[2*breaker:]
+func longestArrays(arr1, arr2, arr3 string) (string, string, string) {
+	if len(arr1) >= len(arr2) && len(arr1) >= len(arr3) {
+		return arr1, arr2, arr3
+	}
+	if len(arr2) >= len(arr1) && len(arr2) >= len(arr3) {
+		return arr2, arr1, arr3
+	}
+	return arr3, arr1, arr2
 }
 
 func charToNumber(ch rune) int {
@@ -92,12 +91,12 @@ func charToNumber(ch rune) int {
 	return -1
 }
 
-func search(items []string, target string) (bool, string, error) {
+func search(items []string, target string) bool {
 	left, right := 0, len(items)-1
 	for left <= right {
 		mid := left + (right-left)/2
 		if items[mid] == target {
-			return true, target, nil
+			return true
 		}
 		if items[mid] < target {
 			left = mid + 1
@@ -105,7 +104,7 @@ func search(items []string, target string) (bool, string, error) {
 			right = mid - 1
 		}
 	}
-	return false, "", nil
+	return false
 }
 
 func halves(items []string) ([]string, []string) {
