@@ -61,10 +61,10 @@ func Day03Of2022PartB(rucksacks []string) (int, error) {
 		sort.Slice(strings.Split(itemsC, ""), func(i, j int) bool {
 			return strings.Split(itemsC, "")[i] < strings.Split(itemsC, "")[j]
 		})
-		longest, second, third := longestArrays(itemsA, itemsB, itemsC)
-		for _, item := range longest {
-			if search(strings.Split(second, ""), string(item)) && search(strings.Split(third, ""), string(item)) {
-				priorities += charToNumber(item)
+		shortest, second, third := shortest(strings.Split(itemsA, ""), strings.Split(itemsB, ""), strings.Split(itemsC, ""))
+		for _, item := range shortest {
+			if search(second, item) && search(third, item) {
+				priorities += charToNumber([]rune(item)[0])
 				break
 			}
 		}
@@ -72,11 +72,11 @@ func Day03Of2022PartB(rucksacks []string) (int, error) {
 	return priorities, nil
 }
 
-func longestArrays(arr1, arr2, arr3 string) (string, string, string) {
-	if len(arr1) >= len(arr2) && len(arr1) >= len(arr3) {
+func shortest(arr1, arr2, arr3 []string) ([]string, []string, []string) {
+	if len(arr1) <= len(arr2) && len(arr1) <= len(arr3) {
 		return arr1, arr2, arr3
 	}
-	if len(arr2) >= len(arr1) && len(arr2) >= len(arr3) {
+	if len(arr2) <= len(arr1) && len(arr2) <= len(arr3) {
 		return arr2, arr1, arr3
 	}
 	return arr3, arr1, arr2
