@@ -52,16 +52,17 @@ func Day03Of2022PartB(rucksacks []string) (int, error) {
 	}
 	for _, group := range groups {
 		itemsA, itemsB, itemsC := group[0], group[1], group[2]
-		sort.Slice(strings.Split(itemsA, ""), func(i, j int) bool {
-			return strings.Split(itemsA, "")[i] < strings.Split(itemsA, "")[j]
+		arrA, arrB, arrC := strings.Split(itemsA, ""), strings.Split(itemsB, ""), strings.Split(itemsC, "")
+		sort.Slice(arrA, func(i, j int) bool {
+			return arrA[i] < arrA[j]
 		})
-		sort.Slice(strings.Split(itemsB, ""), func(i, j int) bool {
-			return strings.Split(itemsB, "")[i] < strings.Split(itemsB, "")[j]
+		sort.Slice(arrB, func(i, j int) bool {
+			return arrB[i] < arrB[j]
 		})
-		sort.Slice(strings.Split(itemsC, ""), func(i, j int) bool {
-			return strings.Split(itemsC, "")[i] < strings.Split(itemsC, "")[j]
+		sort.Slice(arrC, func(i, j int) bool {
+			return arrC[i] < arrC[j]
 		})
-		shortest, second, third := shortest(strings.Split(itemsA, ""), strings.Split(itemsB, ""), strings.Split(itemsC, ""))
+		shortest, second, third := shortest(arrA, arrB, arrC)
 		for _, item := range shortest {
 			if search(second, item) && search(third, item) {
 				priorities += charToNumber([]rune(item)[0])
