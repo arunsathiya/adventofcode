@@ -1,3 +1,5 @@
+import os
+
 def parse_input(input_file):
     with open(input_file, 'r') as file:
         return file.read().splitlines()
@@ -24,7 +26,9 @@ def day04_of_2022_part_b(pairs):
 
 def main():
     try:
-        pairs = parse_input("input.txt")
+        dir = os.path.dirname(os.path.abspath(__file__))
+        input_file = os.path.join(dir, "input.txt")
+        pairs = parse_input(input_file)
         fully_contained = day04_of_2022_part_a(pairs)
         partially_contained = day04_of_2022_part_b(pairs)
         print(fully_contained)
