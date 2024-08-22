@@ -63,15 +63,15 @@ func main() {
 	defer input.Close()
 	pairs, err := parseInput(input)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err)
 	}
 	fullyContained, err := Day04Of2022PartA(pairs)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err)
 	}
 	partiallyContained, err := Day04Of2022PartB(pairs)
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err)
 	}
 	fmt.Println(fullyContained)
 	fmt.Println(partiallyContained)

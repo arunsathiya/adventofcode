@@ -22,3 +22,4 @@ go.work
 
 # Misc
 .DS_Store
+.aider*
