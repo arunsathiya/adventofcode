@@ -23,3 +23,8 @@ go.work
 # Misc
 .DS_Store
 .aider*
+
+# Python
+*.pyc
+__pycache__/
+.pytest_cache/
