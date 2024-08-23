@@ -5,9 +5,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 )
+
+func getCurrentDir() string {
+	_, filename, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(filename)
+	return dir
+}
 
 func parseInput(input *os.File) ([]string, error) {
 	scanner := bufio.NewScanner(input)
@@ -56,7 +64,7 @@ func Day04Of2022PartB(pairs []string) (int, error) {
 }
 
 func main() {
-	input, err := os.Open("input.txt")
+	input, err := os.Open(filepath.Join(getCurrentDir(), "input.txt"))
 	if err != nil {
 		log.Fatal(err)
 	}
