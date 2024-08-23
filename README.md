@@ -1,4 +1,5 @@
-[![Checks](https://github.com/arunsathiya/adventofcode/actions/workflows/tests.yml/badge.svg)](https://github.com/arunsathiya/adventofcode/actions)
+[![Go Checks](https://github.com/arunsathiya/adventofcode/actions/workflows/go-tests.yml/badge.svg)](https://github.com/arunsathiya/adventofcode/actions)
+[![Python Checks](https://github.com/arunsathiya/adventofcode/actions/workflows/python-tests.yml/badge.svg)](https://github.com/arunsathiya/adventofcode/actions)
 
 # Advent Of Code
 
