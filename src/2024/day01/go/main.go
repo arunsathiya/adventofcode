@@ -11,75 +11,58 @@ import (
 	"strings"
 )
 
-func calculateDistances(input *os.File) (int, error) {
-	scanner := bufio.NewScanner(input)
-	sum := 0
-	a := make([]int, 0)
-	b := make([]int, 0)
-	for scanner.Scan() {
-		line := scanner.Text()
-		first := strings.Split(line, "   ")[0]
-		firstN, err := strconv.Atoi(first)
-		if err != nil {
-			log.Fatal(err)
-		}
-		second := strings.Split(line, "   ")[1]
-		secondN, err := strconv.Atoi(second)
-		if err != nil {
-			log.Fatal(err)
-		}
-		a = append(a, firstN)
-		b = append(b, secondN)
-	}
-	sort.Slice(a, func(i, j int) bool {
-		return a[i] < a[j]
-	})
-	sort.Slice(b, func(i, j int) bool {
-		return b[i] < b[j]
-	})
-	for i := 0; i < len(a); i++ {
-		diff := math.Abs(float64(a[i] - b[i]))
-		sum += int(diff)
-	}
-	return sum, nil
+type NumberPairs struct {
+	a []int
+	b []int
 }
 
-func similarityScore(input *os.File) (int, error) {
+func readAndSortNumbers(input *os.File) NumberPairs {
 	scanner := bufio.NewScanner(input)
-	sum := 0
-	a := make([]int, 0)
-	b := make([]int, 0)
-	for scanner.Scan() {
-		line := scanner.Text()
-		first := strings.Split(line, "   ")[0]
-		firstN, err := strconv.Atoi(first)
-		if err != nil {
-			log.Fatal(err)
-		}
-		second := strings.Split(line, "   ")[1]
-		secondN, err := strconv.Atoi(second)
-		if err != nil {
-			log.Fatal(err)
-		}
-		a = append(a, firstN)
-		b = append(b, secondN)
+	pairs := NumberPairs{
+		a: make([]int, 0),
+		b: make([]int, 0),
 	}
-	sort.Slice(a, func(i, j int) bool {
-		return a[i] < a[j]
-	})
-	sort.Slice(b, func(i, j int) bool {
-		return b[i] < b[j]
-	})
-	for _, left := range a {
+
+	for scanner.Scan() {
+		numbers := strings.Split(scanner.Text(), "   ")
+		firstN, err := strconv.Atoi(numbers[0])
+		if err != nil {
+			log.Fatal(err)
+		}
+		secondN, err := strconv.Atoi(numbers[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		pairs.a = append(pairs.a, firstN)
+		pairs.b = append(pairs.b, secondN)
+	}
+
+	sort.Ints(pairs.a)
+	sort.Ints(pairs.b)
+	return pairs
+}
+
+func calculateDistances(pairs NumberPairs) int {
+	sum := 0
+	for i := 0; i < len(pairs.a); i++ {
+		diff := math.Abs(float64(pairs.a[i] - pairs.b[i]))
+		sum += int(diff)
+	}
+	return sum
+}
+
+func similarityScore(pairs NumberPairs) int {
+	sum := 0
+	for _, left := range pairs.a {
 		count := 0
-		for _, right := range b {
+		for _, right := range pairs.b {
 			if left == right {
 				count++
 			}
 		}
 		sum += left * count
 	}
-	return sum, nil
+	return sum
 }
 
 func main() {
@@ -88,15 +71,9 @@ func main() {
 		log.Fatal(err)
 	}
 	defer input.Close()
-	distances, err := calculateDistances(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	input.Seek(0, 0)
-	similarityScore, err := similarityScore(input)
-	if err != nil {
-		log.Fatal(err)
-	}
+	pairs := readAndSortNumbers(input)
+	distances := calculateDistances(pairs)
+	similarity := similarityScore(pairs)
 	fmt.Println(distances)
-	fmt.Println(similarityScore)
+	fmt.Println(similarity)
 }
