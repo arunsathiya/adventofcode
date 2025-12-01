@@ -1,0 +1,35 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+)
+
+func partA(lines []string) int {
+	// TODO: Implement part A
+	return 0
+}
+
+func partB(lines []string) int {
+	// TODO: Implement part B
+	return 0
+}
+
+func main() {
+	file, err := os.Open("../input.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	fmt.Println("Part A:", partA(lines))
+	fmt.Println("Part B:", partB(lines))
+}
